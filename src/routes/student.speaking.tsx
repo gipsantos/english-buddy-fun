@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Celebration } from "@/components/Celebration";
 import { Mic, Square, ArrowLeft, ArrowRight, Volume2, RotateCcw } from "lucide-react";
-import { completeStep, addXP } from "@/lib/progress";
+import { completeStep, addXP, recordLesson } from "@/lib/progress";
 
 export const Route = createFileRoute("/student/speaking")({
   head: () => ({
@@ -67,6 +67,7 @@ function SpeakingLab() {
   const finish = () => {
     addXP(30);
     completeStep("speak");
+    recordLesson({ title: "Speaking — Prompts", emoji: "🗣️", xp: 30 });
     setCelebrate(true);
   };
 
