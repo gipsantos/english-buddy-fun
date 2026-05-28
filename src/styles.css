@@ -40,6 +40,10 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-student: var(--student);
+  --color-student-foreground: var(--student-foreground);
+  --color-parent: var(--parent);
+  --color-parent-foreground: var(--parent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
