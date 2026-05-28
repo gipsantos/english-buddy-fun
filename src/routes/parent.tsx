@@ -251,7 +251,7 @@ function Metric({ label, value, delta }: { label: string; value: string; delta: 
     <div className="rounded-2xl bg-white/20 p-4 backdrop-blur">
       <p className="text-xs font-bold uppercase tracking-wider text-white/80">{label}</p>
       <p className="mt-1 text-2xl font-extrabold">{value}</p>
-      <p className="text-xs font-semibold text-white/90">{delta} vs last week</p>
+      <p className="text-xs font-semibold text-white/90">{delta}</p>
     </div>
   );
 }
