@@ -154,5 +154,28 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
   }
 }
+
+@layer utilities {
+  .bg-app-gradient { background: var(--gradient-bg); }
+  .bg-student-gradient { background: var(--gradient-student); }
+  .bg-parent-gradient { background: var(--gradient-parent); }
+  .bg-header-gradient { background: var(--gradient-header); }
+  .text-header-gradient {
+    background: var(--gradient-header);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .shadow-soft { box-shadow: var(--shadow-soft); }
+  .shadow-pop { box-shadow: var(--shadow-pop); }
+}
+
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float { animation: float-soft 4s ease-in-out infinite; }
+.animate-float-delay { animation: float-soft 4s ease-in-out -2s infinite; }
