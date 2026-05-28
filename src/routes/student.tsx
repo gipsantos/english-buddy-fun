@@ -8,7 +8,7 @@ import {
   getLevel,
   getSeenLevel,
   setSeenLevel,
-  STREAK_DAYS,
+  getStreak,
   type StepKey,
 } from "@/lib/progress";
 import { LevelUpModal } from "@/components/LevelUpModal";
@@ -48,6 +48,7 @@ function StudentDashboard() {
   );
   const [completed, setCompleted] = useState(() => getCompletedSteps());
   const [xp, setXp] = useState(() => getXP());
+  const [streak, setStreak] = useState(() => getStreak());
   const [levelUp, setLevelUp] = useState<number | null>(null);
 
   useEffect(() => {
@@ -55,6 +56,7 @@ function StudentDashboard() {
       setCompleted(getCompletedSteps());
       const nextXp = getXP();
       setXp(nextXp);
+      setStreak(getStreak());
       const lvl = getLevel(nextXp);
       const seen = getSeenLevel();
       if (lvl > seen) {
@@ -109,8 +111,10 @@ function StudentDashboard() {
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-white/85">Streak</p>
-              <p className="text-3xl font-extrabold leading-none">{STREAK_DAYS} days 🔥</p>
-              <p className="mt-1 text-xs font-semibold text-white/85">Keep it burning!</p>
+              <p className="text-3xl font-extrabold leading-none">{streak} {streak === 1 ? "day" : "days"} 🔥</p>
+              <p className="mt-1 text-xs font-semibold text-white/85">
+                {streak === 0 ? "Start today to ignite it!" : "Keep it burning!"}
+              </p>
             </div>
           </div>
 
