@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentWritingRouteImport } from './routes/student.writing'
 import { Route as StudentVocabularyRouteImport } from './routes/student.vocabulary'
 import { Route as StudentSpeakingRouteImport } from './routes/student.speaking'
 import { Route as StudentListeningRouteImport } from './routes/student.listening'
@@ -31,6 +32,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StudentWritingRoute = StudentWritingRouteImport.update({
+  id: '/writing',
+  path: '/writing',
+  getParentRoute: () => StudentRoute,
 } as any)
 const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
   id: '/vocabulary',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/student/listening': typeof StudentListeningRoute
   '/student/speaking': typeof StudentSpeakingRoute
   '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
+  '/student/writing': typeof StudentWritingRoute
   '/student/vocabulary/$category': typeof StudentVocabularyCategoryRoute
 }
 export interface FileRoutesByTo {
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/student/listening': typeof StudentListeningRoute
   '/student/speaking': typeof StudentSpeakingRoute
   '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
+  '/student/writing': typeof StudentWritingRoute
   '/student/vocabulary/$category': typeof StudentVocabularyCategoryRoute
 }
 export interface FileRoutesById {
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/student/listening': typeof StudentListeningRoute
   '/student/speaking': typeof StudentSpeakingRoute
   '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
+  '/student/writing': typeof StudentWritingRoute
   '/student/vocabulary/$category': typeof StudentVocabularyCategoryRoute
 }
 export interface FileRouteTypes {
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/student/listening'
     | '/student/speaking'
     | '/student/vocabulary'
+    | '/student/writing'
     | '/student/vocabulary/$category'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/student/listening'
     | '/student/speaking'
     | '/student/vocabulary'
+    | '/student/writing'
     | '/student/vocabulary/$category'
   id:
     | '__root__'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/student/listening'
     | '/student/speaking'
     | '/student/vocabulary'
+    | '/student/writing'
     | '/student/vocabulary/$category'
   fileRoutesById: FileRoutesById
 }
@@ -140,6 +152,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/student/writing': {
+      id: '/student/writing'
+      path: '/writing'
+      fullPath: '/student/writing'
+      preLoaderRoute: typeof StudentWritingRouteImport
+      parentRoute: typeof StudentRoute
     }
     '/student/vocabulary': {
       id: '/student/vocabulary'
@@ -187,12 +206,14 @@ interface StudentRouteChildren {
   StudentListeningRoute: typeof StudentListeningRoute
   StudentSpeakingRoute: typeof StudentSpeakingRoute
   StudentVocabularyRoute: typeof StudentVocabularyRouteWithChildren
+  StudentWritingRoute: typeof StudentWritingRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentListeningRoute: StudentListeningRoute,
   StudentSpeakingRoute: StudentSpeakingRoute,
   StudentVocabularyRoute: StudentVocabularyRouteWithChildren,
+  StudentWritingRoute: StudentWritingRoute,
 }
 
 const StudentRouteWithChildren =
@@ -206,3 +227,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
