@@ -212,6 +212,7 @@ function MatchGame({ words, onWin }: { words: Word[]; onWin: () => void }) {
   const [shuffledTargets] = useState(() => [...words].sort(() => Math.random() - 0.5));
   const [matched, setMatched] = useState<Record<string, boolean>>({});
   const [dragging, setDragging] = useState<string | null>(null);
+  const [picked, setPicked] = useState<string | null>(null);
   const [wrong, setWrong] = useState<string | null>(null);
 
   const allDone = Object.keys(matched).length === words.length;
@@ -232,14 +233,16 @@ function MatchGame({ words, onWin }: { words: Word[]; onWin: () => void }) {
       setTimeout(() => setWrong(null), 600);
     }
     setDragging(null);
+    setPicked(null);
   };
 
   const reset = () => {
     setMatched({});
+    setPicked(null);
   };
 
   return (
-    <section className="mt-8 rounded-[2rem] bg-card p-6 shadow-soft md:p-8">
+    <section className="mt-8 rounded-[2rem] bg-card p-4 shadow-soft sm:p-6 md:p-8">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold">Match the Word 🎯</h2>
@@ -253,24 +256,34 @@ function MatchGame({ words, onWin }: { words: Word[]; onWin: () => void }) {
         </button>
       </div>
 
+      {/* Hint for mobile */}
+      <p className="mt-3 text-xs text-muted-foreground sm:hidden">
+        Tap a word, then tap its picture.
+      </p>
+
       {/* Word chips */}
-      <div className="mt-6 flex flex-wrap gap-3">
+      <div className="mt-5 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
         {words.map((w) => {
           const isMatched = matched[w.en];
           const isWrong = wrong === w.en;
+          const isPicked = picked === w.en;
           return (
             <button
               key={w.en}
               draggable={!isMatched}
               onDragStart={() => setDragging(w.en)}
               onDragEnd={() => setDragging(null)}
-              onClick={() => !isMatched && speak(w.en)}
-              className={`select-none rounded-full px-5 py-3 text-base font-extrabold shadow-pop transition-all ${
+              onClick={() => {
+                if (isMatched) return;
+                speak(w.en);
+                setPicked((p) => (p === w.en ? null : w.en));
+              }}
+              className={`select-none rounded-full px-4 py-2.5 text-sm font-extrabold shadow-pop transition-all sm:px-5 sm:py-3 sm:text-base ${
                 isMatched
                   ? "cursor-default bg-emerald-100 text-emerald-700 opacity-60"
                   : isWrong
                     ? "cursor-grab bg-rose-500 text-white animate-[scale-in_0.2s] ring-4 ring-rose-300"
-                    : dragging === w.en
+                    : dragging === w.en || isPicked
                       ? "cursor-grabbing bg-primary text-primary-foreground scale-105"
                       : "cursor-grab bg-student-gradient text-white hover:scale-105"
               }`}
@@ -282,22 +295,30 @@ function MatchGame({ words, onWin }: { words: Word[]; onWin: () => void }) {
       </div>
 
       {/* Drop targets */}
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+      <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2">
         {shuffledTargets.map((t) => {
           const isMatched = matched[t.en];
           return (
-            <div
+            <button
+              type="button"
               key={t.en}
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => dragging && tryMatch(dragging, t.en)}
-              className={`flex items-center justify-between gap-3 rounded-2xl border-2 border-dashed p-4 transition-all ${
+              onClick={() => {
+                if (isMatched) return;
+                if (picked) tryMatch(picked, t.en);
+              }}
+              disabled={isMatched}
+              className={`flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-dashed p-3 text-left transition-all sm:p-4 ${
                 isMatched
                   ? "border-emerald-400 bg-emerald-50"
-                  : "border-border bg-muted/40 hover:border-primary/60 hover:bg-secondary/10"
+                  : picked
+                    ? "border-primary/70 bg-secondary/10 active:scale-[0.98]"
+                    : "border-border bg-muted/40 hover:border-primary/60 hover:bg-secondary/10"
               }`}
             >
               <div className="flex items-center gap-3">
-                <span className="text-4xl">{t.emoji}</span>
+                <span className="text-3xl sm:text-4xl">{t.emoji}</span>
                 <span className="text-base font-bold text-muted-foreground">{t.pt}</span>
               </div>
               {isMatched ? (
@@ -306,10 +327,10 @@ function MatchGame({ words, onWin }: { words: Word[]; onWin: () => void }) {
                 </span>
               ) : (
                 <span className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-muted-foreground shadow">
-                  drop here
+                  {picked ? "tap to drop" : "drop here"}
                 </span>
               )}
-            </div>
+            </button>
           );
         })}
       </div>
