@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentVocabularyRouteImport } from './routes/student.vocabulary'
 import { Route as StudentListeningRouteImport } from './routes/student.listening'
 
 const StudentRoute = StudentRouteImport.update({
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentListeningRoute = StudentListeningRouteImport.update({
   id: '/listening',
   path: '/listening',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
   '/student/listening': typeof StudentListeningRoute
+  '/student/vocabulary': typeof StudentVocabularyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
   '/student/listening': typeof StudentListeningRoute
+  '/student/vocabulary': typeof StudentVocabularyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,30 @@ export interface FileRoutesById {
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
   '/student/listening': typeof StudentListeningRoute
+  '/student/vocabulary': typeof StudentVocabularyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/parent' | '/student' | '/student/listening'
+  fullPaths:
+    | '/'
+    | '/parent'
+    | '/student'
+    | '/student/listening'
+    | '/student/vocabulary'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/parent' | '/student' | '/student/listening'
-  id: '__root__' | '/' | '/parent' | '/student' | '/student/listening'
+  to:
+    | '/'
+    | '/parent'
+    | '/student'
+    | '/student/listening'
+    | '/student/vocabulary'
+  id:
+    | '__root__'
+    | '/'
+    | '/parent'
+    | '/student'
+    | '/student/listening'
+    | '/student/vocabulary'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -91,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/vocabulary': {
+      id: '/student/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/student/vocabulary'
+      preLoaderRoute: typeof StudentVocabularyRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/listening': {
       id: '/student/listening'
       path: '/listening'
@@ -103,10 +135,12 @@ declare module '@tanstack/react-router' {
 
 interface StudentRouteChildren {
   StudentListeningRoute: typeof StudentListeningRoute
+  StudentVocabularyRoute: typeof StudentVocabularyRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentListeningRoute: StudentListeningRoute,
+  StudentVocabularyRoute: StudentVocabularyRoute,
 }
 
 const StudentRouteWithChildren =
@@ -120,3 +154,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
