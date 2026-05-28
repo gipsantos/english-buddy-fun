@@ -192,3 +192,8 @@
     opacity: 0;
   }
 }
+
+@keyframes wave-bar {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
