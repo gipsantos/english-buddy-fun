@@ -38,6 +38,83 @@ export type LittleExercise =
       xpReward: number;
     };
 
+// Portuguese translations for each exercise (read aloud after the English question).
+export const littlePt: Record<number, string> = {
+  1: "De que cor é a maçã?",
+  2: "Liga o animal ao som que ele faz.",
+  3: "Que palavra ouviste?",
+  4: "Diz: O meu nome é...",
+  5: "Que número é este?",
+  6: "O que é isto? Uma banana.",
+  7: "Encontra os animais iguais.",
+  8: "O sol é amarelo.",
+  9: "Quem é? É a mamã.",
+  10: "Onde estão os teus olhos?",
+  11: "Diz a tua cor preferida.",
+  12: "Liga o brinquedo à palavra certa.",
+  13: "Qual o animal que diz miau?",
+  14: "O que é isto? Um carro.",
+  15: "Como está o tempo? Está sol.",
+  16: "Que forma é esta? Um círculo.",
+  17: "Consegues dizer cão em inglês?",
+  18: "Um, dois, três.",
+  19: "Qual deles é leite?",
+  20: "O que é isto? Uma t-shirt.",
+  21: "O que usamos para andar? Os pés.",
+  22: "Qual o animal que diz muu?",
+  23: "Liga cada coisa à sua cor.",
+  24: "Diz: Olá!",
+  25: "Quem é o papá?",
+  26: "Que animal é este? Um leão.",
+  27: "O que cai do céu? A chuva.",
+  28: "A relva é verde.",
+  29: "Que brinquedo ouviste?",
+  30: "Encontra a fruta igual.",
+  31: "O que é isto? Um elefante.",
+  32: "Que forma tem três lados? Um triângulo.",
+  33: "Consegues contar até três?",
+  34: "Liga cada transporte à palavra certa.",
+  35: "Qual deles é uma maçã?",
+  36: "Bom dia!",
+  37: "Bate palmas com as mãos!",
+  38: "O que são estes? Sapatos.",
+  39: "Que animal voa? O pássaro.",
+  40: "Diz: Eu adoro a minha família!",
+  41: "Liga cada parte do corpo.",
+  42: "De que cor é o céu? Azul.",
+  43: "Que bebida é esta? Sumo.",
+  44: "Que número ouviste? Um.",
+  45: "O pato diz quack.",
+  46: "Que brinquedo é redondo? A bola.",
+  47: "Diz: Está sol!",
+  48: "Liga cada fruta à palavra certa.",
+  49: "O que voa no céu? O avião.",
+  50: "Boa! Acabaste cinquenta exercícios!",
+};
+
+// Topic catalog shown on the Little One menu — emoji-first so non-readers can pick.
+export const littleTopics: Array<{
+  id: string;
+  emoji: string;
+  labelEn: string;
+  labelPt: string;
+  topics: string[];
+}> = [
+  { id: "colors", emoji: "🎨", labelEn: "Colors", labelPt: "Cores", topics: ["colors"] },
+  { id: "animals", emoji: "🐶", labelEn: "Animals", labelPt: "Animais", topics: ["animals"] },
+  { id: "numbers", emoji: "🔢", labelEn: "Numbers", labelPt: "Números", topics: ["numbers"] },
+  { id: "food", emoji: "🍎", labelEn: "Food", labelPt: "Comida", topics: ["food"] },
+  { id: "body", emoji: "👀", labelEn: "Body", labelPt: "Corpo", topics: ["body"] },
+  { id: "family", emoji: "👨‍👩‍👧", labelEn: "Family", labelPt: "Família", topics: ["family"] },
+  { id: "toys", emoji: "🧸", labelEn: "Toys", labelPt: "Brinquedos", topics: ["toys"] },
+  { id: "transport", emoji: "🚗", labelEn: "Transport", labelPt: "Transportes", topics: ["transport"] },
+  { id: "weather", emoji: "☀️", labelEn: "Weather", labelPt: "Tempo", topics: ["weather"] },
+  { id: "shapes", emoji: "🔺", labelEn: "Shapes", labelPt: "Formas", topics: ["shapes"] },
+  { id: "clothes", emoji: "👕", labelEn: "Clothes", labelPt: "Roupa", topics: ["clothes"] },
+  { id: "hello", emoji: "👋", labelEn: "Hello", labelPt: "Olá", topics: ["greetings", "introductions"] },
+  { id: "all", emoji: "🎲", labelEn: "Surprise!", labelPt: "Surpresa!", topics: [] },
+];
+
 export const littlePool = {
   ageGroup: "3 years old",
   level: "beginner",
