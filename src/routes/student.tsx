@@ -221,6 +221,10 @@ function StudentDashboard() {
           <StarMap unlocked={unlocked} total={TOTAL_LEVELS} />
         </section>
       </main>
+
+      {levelUp !== null && (
+        <LevelUpModal level={levelUp} onClose={() => setLevelUp(null)} />
+      )}
     </div>
   );
 }
