@@ -41,14 +41,22 @@ function Index() {
           Pick your profile and jump into a world of words, games, and gold stars.
         </p>
 
-        <div className="mt-14 grid w-full gap-8 md:grid-cols-2">
+        <div className="mt-14 grid w-full gap-8 md:grid-cols-3">
+          <ProfileCard
+            to="/little"
+            label="Little One"
+            tag="I am 3! Tap & play 🧸"
+            emoji="🧸"
+            gradient="bg-gradient-to-br from-amber-400 via-orange-400 to-pink-500"
+            float="animate-float"
+          />
           <ProfileCard
             to="/student"
             label="Student"
-            tag="I want to play & learn"
+            tag="Age 10–12 · play & learn"
             image={studentAvatar}
             gradient="bg-student-gradient"
-            float="animate-float"
+            float="animate-float-delay"
           />
           <ProfileCard
             to="/parent"
@@ -56,7 +64,7 @@ function Index() {
             tag="Track my child's progress"
             image={parentAvatar}
             gradient="bg-parent-gradient"
-            float="animate-float-delay"
+            float="animate-float"
           />
         </div>
       </main>
@@ -69,13 +77,15 @@ function ProfileCard({
   label,
   tag,
   image,
+  emoji,
   gradient,
   float,
 }: {
-  to: "/student" | "/parent";
+  to: "/student" | "/parent" | "/little";
   label: string;
   tag: string;
-  image: string;
+  image?: string;
+  emoji?: string;
   gradient: string;
   float: string;
 }) {
@@ -86,13 +96,17 @@ function ProfileCard({
     >
       <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/15 blur-2xl" />
       <div className="relative grid h-56 w-56 place-items-center rounded-full bg-white/25 backdrop-blur md:h-64 md:w-64">
-        <img
-          src={image}
-          alt={`${label} avatar`}
-          width={768}
-          height={768}
-          className={`h-48 w-48 object-contain drop-shadow-xl md:h-56 md:w-56 ${float}`}
-        />
+        {image ? (
+          <img
+            src={image}
+            alt={`${label} avatar`}
+            width={768}
+            height={768}
+            className={`h-48 w-48 object-contain drop-shadow-xl md:h-56 md:w-56 ${float}`}
+          />
+        ) : (
+          <span className={`text-[9rem] drop-shadow-xl md:text-[10rem] ${float}`}>{emoji}</span>
+        )}
       </div>
       <h2 className="mt-6 text-4xl font-extrabold tracking-tight md:text-5xl">{label}</h2>
       <p className="mt-2 text-base font-medium text-white/85">{tag}</p>
