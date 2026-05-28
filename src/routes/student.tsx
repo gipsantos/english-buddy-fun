@@ -139,12 +139,13 @@ function StudentDashboard() {
             </ol>
           </div>
 
-          <button
+          <Link
+            to="/student/listening"
             className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-extrabold text-accent-foreground shadow-pop transition-transform hover:scale-[1.02] md:w-auto"
           >
             <Sparkles className="h-5 w-5" />
             Start Mission: {nextStep?.label ?? "All done!"}
-          </button>
+          </Link>
         </section>
 
         {/* Star Map */}
