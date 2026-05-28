@@ -151,13 +151,11 @@ function BigButton({
   );
 }
 
-function Choice({
-  ex,
-  onCorrect,
-}: {
-  ex: Extract<LittleExercise, { options: string[] }>;
-  onCorrect: (xp: number) => void;
-}) {
+type ChoiceEx = Extract<
+  LittleExercise,
+  { type: "flashcard" | "multiple_choice" | "fill_blank" }
+>;
+function Choice({ ex, onCorrect }: { ex: ChoiceEx; onCorrect: (xp: number) => void }) {
   const [picked, setPicked] = useState<string | null>(null);
   const handle = (opt: string) => {
     if (picked) return;
@@ -191,13 +189,8 @@ function Choice({
   );
 }
 
-function Listening({
-  ex,
-  onCorrect,
-}: {
-  ex: Extract<LittleExercise, { type: "listening" }>;
-  onCorrect: (xp: number) => void;
-}) {
+type ListeningEx = Extract<LittleExercise, { type: "listening" }>;
+function Listening({ ex, onCorrect }: { ex: ListeningEx; onCorrect: (xp: number) => void }) {
   const [picked, setPicked] = useState<string | null>(null);
   return (
     <>
