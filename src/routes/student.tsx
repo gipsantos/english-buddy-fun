@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Flame, Headphones, BookOpen, Mic, PenLine, Check, Lock, Star, Sparkles } from "lucide-react";
@@ -34,6 +34,10 @@ const stepDefs: Step[] = [
 const TOTAL_LEVELS = 12;
 
 function StudentDashboard() {
+  const matches = useMatches();
+  const hasChild = matches.some(
+    (m) => m.routeId !== "/student" && m.routeId.startsWith("/student/"),
+  );
   const [completed, setCompleted] = useState(() => getCompletedSteps());
   const [xp, setXp] = useState(() => getXP());
 
@@ -56,6 +60,8 @@ function StudentDashboard() {
   const doneCount = steps.filter((s) => s.done).length;
   const xpPct = Math.min(100, (xp / XP_GOAL) * 100);
   const unlocked = Math.max(1, doneCount + 1);
+
+  if (hasChild) return <Outlet />;
 
   return (
     <div className="min-h-screen bg-app-gradient">
