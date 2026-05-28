@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useParams, Navigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Volume2, ArrowRight, ArrowLeft, Check, Sparkles, RotateCcw, X } from "lucide-react";
+import { Volume2, ArrowRight, ArrowLeft, Check, Sparkles, RotateCcw } from "lucide-react";
 import { completeStep, addXP } from "@/lib/progress";
 
 export const Route = createFileRoute("/student/vocabulary/$category")({
