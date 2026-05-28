@@ -1,5 +1,9 @@
 const STEP_KEY = "eb_steps_v1";
 const XP_KEY = "eb_xp_v1";
+const LEVEL_SEEN_KEY = "eb_level_seen_v1";
+
+export const XP_PER_LEVEL = 100;
+export const STREAK_DAYS = 5;
 
 export type StepKey = "listen" | "vocab" | "speak" | "write";
 
@@ -33,4 +37,19 @@ export function addXP(amount: number) {
   const cur = getXP();
   localStorage.setItem(XP_KEY, String(cur + amount));
   window.dispatchEvent(new Event("eb-progress"));
+}
+
+export function getLevel(xp = getXP()): number {
+  return Math.floor(xp / XP_PER_LEVEL) + 1;
+}
+
+export function getSeenLevel(): number {
+  if (typeof window === "undefined") return getLevel();
+  const raw = localStorage.getItem(LEVEL_SEEN_KEY);
+  return raw ? Number(raw) : getLevel();
+}
+
+export function setSeenLevel(level: number) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(LEVEL_SEEN_KEY, String(level));
 }
