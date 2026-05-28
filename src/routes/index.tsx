@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-app-gradient">
+    <div className="relative min-h-screen overflow-hidden bg-app-gradient animate-[fade-in_0.3s_ease-out]">
       {/* decorative blobs */}
       <div className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full bg-secondary/40 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-primary/40 blur-3xl" />
