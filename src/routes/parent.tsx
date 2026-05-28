@@ -80,7 +80,7 @@ function ParentDashboard() {
   const hasAnyActivity = history.length > 0 || weeklyXpTotal > 0;
 
   return (
-    <div className="min-h-screen bg-app-gradient">
+    <div className="min-h-screen bg-app-gradient animate-[fade-in_0.3s_ease-out]">
       <header className="flex items-center justify-between px-6 py-6 md:px-12">
         <Logo />
         <Link to="/" className="rounded-full bg-white/80 px-4 py-2 text-sm font-bold text-primary shadow-soft backdrop-blur hover:bg-white">
