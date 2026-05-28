@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as ParentRouteImport } from './routes/parent'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StudentVocabularyRouteImport } from './routes/student.vocabulary'
 import { Route as StudentListeningRouteImport } from './routes/student.listening'
+import { Route as StudentVocabularyCategoryRouteImport } from './routes/student.vocabulary.$category'
 
 const StudentRoute = StudentRouteImport.update({
   id: '/student',
@@ -29,23 +31,38 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentVocabularyRoute = StudentVocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentListeningRoute = StudentListeningRouteImport.update({
   id: '/listening',
   path: '/listening',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentVocabularyCategoryRoute =
+  StudentVocabularyCategoryRouteImport.update({
+    id: '/$category',
+    path: '/$category',
+    getParentRoute: () => StudentVocabularyRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
   '/student/listening': typeof StudentListeningRoute
+  '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
+  '/student/vocabulary/$category': typeof StudentVocabularyCategoryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
   '/student/listening': typeof StudentListeningRoute
+  '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
+  '/student/vocabulary/$category': typeof StudentVocabularyCategoryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +70,34 @@ export interface FileRoutesById {
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
   '/student/listening': typeof StudentListeningRoute
+  '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
+  '/student/vocabulary/$category': typeof StudentVocabularyCategoryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/parent' | '/student' | '/student/listening'
+  fullPaths:
+    | '/'
+    | '/parent'
+    | '/student'
+    | '/student/listening'
+    | '/student/vocabulary'
+    | '/student/vocabulary/$category'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/parent' | '/student' | '/student/listening'
-  id: '__root__' | '/' | '/parent' | '/student' | '/student/listening'
+  to:
+    | '/'
+    | '/parent'
+    | '/student'
+    | '/student/listening'
+    | '/student/vocabulary'
+    | '/student/vocabulary/$category'
+  id:
+    | '__root__'
+    | '/'
+    | '/parent'
+    | '/student'
+    | '/student/listening'
+    | '/student/vocabulary'
+    | '/student/vocabulary/$category'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -91,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/vocabulary': {
+      id: '/student/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/student/vocabulary'
+      preLoaderRoute: typeof StudentVocabularyRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/listening': {
       id: '/student/listening'
       path: '/listening'
@@ -98,15 +143,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentListeningRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/vocabulary/$category': {
+      id: '/student/vocabulary/$category'
+      path: '/$category'
+      fullPath: '/student/vocabulary/$category'
+      preLoaderRoute: typeof StudentVocabularyCategoryRouteImport
+      parentRoute: typeof StudentVocabularyRoute
+    }
   }
 }
 
+interface StudentVocabularyRouteChildren {
+  StudentVocabularyCategoryRoute: typeof StudentVocabularyCategoryRoute
+}
+
+const StudentVocabularyRouteChildren: StudentVocabularyRouteChildren = {
+  StudentVocabularyCategoryRoute: StudentVocabularyCategoryRoute,
+}
+
+const StudentVocabularyRouteWithChildren =
+  StudentVocabularyRoute._addFileChildren(StudentVocabularyRouteChildren)
+
 interface StudentRouteChildren {
   StudentListeningRoute: typeof StudentListeningRoute
+  StudentVocabularyRoute: typeof StudentVocabularyRouteWithChildren
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentListeningRoute: StudentListeningRoute,
+  StudentVocabularyRoute: StudentVocabularyRouteWithChildren,
 }
 
 const StudentRouteWithChildren =
