@@ -38,8 +38,6 @@ function StudentDashboard() {
   const hasChild = matches.some(
     (m) => m.routeId !== "/student" && m.routeId.startsWith("/student/"),
   );
-  if (hasChild) return <Outlet />;
-
   const [completed, setCompleted] = useState(() => getCompletedSteps());
   const [xp, setXp] = useState(() => getXP());
 
@@ -62,6 +60,8 @@ function StudentDashboard() {
   const doneCount = steps.filter((s) => s.done).length;
   const xpPct = Math.min(100, (xp / XP_GOAL) * 100);
   const unlocked = Math.max(1, doneCount + 1);
+
+  if (hasChild) return <Outlet />;
 
   return (
     <div className="min-h-screen bg-app-gradient">
