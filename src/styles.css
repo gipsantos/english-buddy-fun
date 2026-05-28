@@ -197,3 +197,14 @@
   0% { transform: scaleY(0.4); }
   100% { transform: scaleY(1); }
 }
+
+@keyframes rays-spin {
+  from { transform-origin: 50% 100%; }
+  to { transform: translate(-50%, -100%) rotate(360deg); }
+}
+
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.82 0.16 95 / 0.6), 0 10px 25px -8px oklch(0.62 0.21 275 / 0.5); }
+  50% { box-shadow: 0 0 25px 8px oklch(0.82 0.16 95 / 0.55), 0 10px 25px -8px oklch(0.62 0.21 275 / 0.5); }
+}
+.animate-badge-glow { animation: badge-glow 2.4s ease-in-out infinite; }
