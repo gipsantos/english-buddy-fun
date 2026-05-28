@@ -1,8 +1,17 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
-import { Flame, Headphones, BookOpen, Mic, PenLine, Check, Lock, Star, Sparkles } from "lucide-react";
-import { getCompletedSteps, getXP, type StepKey } from "@/lib/progress";
+import { Flame, Headphones, BookOpen, Mic, PenLine, Check, Lock, Star, Sparkles, Trophy } from "lucide-react";
+import {
+  getCompletedSteps,
+  getXP,
+  getLevel,
+  getSeenLevel,
+  setSeenLevel,
+  STREAK_DAYS,
+  type StepKey,
+} from "@/lib/progress";
+import { LevelUpModal } from "@/components/LevelUpModal";
 
 export const Route = createFileRoute("/student")({
   head: () => ({
@@ -14,7 +23,6 @@ export const Route = createFileRoute("/student")({
   component: StudentDashboard,
 });
 
-const STREAK = 5;
 const XP_GOAL = 500;
 
 type Step = {
@@ -40,11 +48,19 @@ function StudentDashboard() {
   );
   const [completed, setCompleted] = useState(() => getCompletedSteps());
   const [xp, setXp] = useState(() => getXP());
+  const [levelUp, setLevelUp] = useState<number | null>(null);
 
   useEffect(() => {
     const sync = () => {
       setCompleted(getCompletedSteps());
-      setXp(getXP());
+      const nextXp = getXP();
+      setXp(nextXp);
+      const lvl = getLevel(nextXp);
+      const seen = getSeenLevel();
+      if (lvl > seen) {
+        setLevelUp(lvl);
+        setSeenLevel(lvl);
+      }
     };
     sync();
     window.addEventListener("eb-progress", sync);
@@ -59,7 +75,8 @@ function StudentDashboard() {
   const nextStep = steps.find((s) => !s.done);
   const doneCount = steps.filter((s) => s.done).length;
   const xpPct = Math.min(100, (xp / XP_GOAL) * 100);
-  const unlocked = Math.max(1, doneCount + 1);
+  const level = getLevel(xp);
+  const unlocked = Math.min(TOTAL_LEVELS, Math.max(1, level));
 
   if (hasChild) return <Outlet />;
 
@@ -67,9 +84,20 @@ function StudentDashboard() {
     <div className="min-h-screen bg-app-gradient">
       <header className="flex items-center justify-between px-6 py-6 md:px-12">
         <Logo />
-        <Link to="/" className="rounded-full bg-white/80 px-4 py-2 text-sm font-bold text-primary shadow-soft backdrop-blur hover:bg-white">
-          ← Switch profile
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/student/achievements"
+            className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-sm font-extrabold text-accent-foreground shadow-pop hover:scale-105"
+          >
+            <Trophy className="h-4 w-4" /> Trophies
+          </Link>
+          <Link
+            to="/"
+            className="rounded-full bg-white/80 px-4 py-2 text-sm font-bold text-primary shadow-soft backdrop-blur hover:bg-white"
+          >
+            ← Switch
+          </Link>
+        </div>
       </header>
 
       <main className="mx-auto max-w-5xl px-6 pb-20">
@@ -81,7 +109,7 @@ function StudentDashboard() {
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-white/85">Streak</p>
-              <p className="text-3xl font-extrabold leading-none">{STREAK} days 🔥</p>
+              <p className="text-3xl font-extrabold leading-none">{STREAK_DAYS} days 🔥</p>
               <p className="mt-1 text-xs font-semibold text-white/85">Keep it burning!</p>
             </div>
           </div>
