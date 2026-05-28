@@ -21,14 +21,14 @@ type Step = {
   key: StepKey;
   label: string;
   icon: typeof Headphones;
-  to: "/student/listening" | "/student/vocabulary" | "/student";
+  to: "/student/listening" | "/student/vocabulary" | "/student/speaking" | "/student/writing";
 };
 
 const stepDefs: Step[] = [
   { key: "listen", label: "Listening", icon: Headphones, to: "/student/listening" },
   { key: "vocab", label: "Vocabulary", icon: BookOpen, to: "/student/vocabulary" },
-  { key: "speak", label: "Speaking", icon: Mic, to: "/student" },
-  { key: "write", label: "Writing", icon: PenLine, to: "/student" },
+  { key: "speak", label: "Speaking", icon: Mic, to: "/student/speaking" },
+  { key: "write", label: "Writing", icon: PenLine, to: "/student/writing" },
 ];
 
 const TOTAL_LEVELS = 12;
