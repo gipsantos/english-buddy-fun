@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useParams, Navigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Volume2, ArrowRight, ArrowLeft, Check, Sparkles, RotateCcw } from "lucide-react";
-import { completeStep, addXP } from "@/lib/progress";
+import { completeStep, addXP, recordLesson, recordWords } from "@/lib/progress";
 
 export const Route = createFileRoute("/student/vocabulary/$category")({
   component: CategoryPage,
@@ -112,6 +112,8 @@ function CategoryPage() {
           onWin={() => {
             addXP(40);
             completeStep("vocab");
+            recordLesson({ title: `Vocabulary — ${data.title}`, emoji: "📚", xp: 40 });
+            recordWords(data.words.map((w) => w.en));
             setPhase("done");
           }}
         />
