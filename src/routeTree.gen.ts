@@ -16,6 +16,7 @@ import { Route as StudentWritingRouteImport } from './routes/student.writing'
 import { Route as StudentVocabularyRouteImport } from './routes/student.vocabulary'
 import { Route as StudentSpeakingRouteImport } from './routes/student.speaking'
 import { Route as StudentListeningRouteImport } from './routes/student.listening'
+import { Route as StudentAchievementsRouteImport } from './routes/student.achievements'
 import { Route as StudentVocabularyCategoryRouteImport } from './routes/student.vocabulary.$category'
 
 const StudentRoute = StudentRouteImport.update({
@@ -53,6 +54,11 @@ const StudentListeningRoute = StudentListeningRouteImport.update({
   path: '/listening',
   getParentRoute: () => StudentRoute,
 } as any)
+const StudentAchievementsRoute = StudentAchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
+  getParentRoute: () => StudentRoute,
+} as any)
 const StudentVocabularyCategoryRoute =
   StudentVocabularyCategoryRouteImport.update({
     id: '/$category',
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
+  '/student/achievements': typeof StudentAchievementsRoute
   '/student/listening': typeof StudentListeningRoute
   '/student/speaking': typeof StudentSpeakingRoute
   '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
+  '/student/achievements': typeof StudentAchievementsRoute
   '/student/listening': typeof StudentListeningRoute
   '/student/speaking': typeof StudentSpeakingRoute
   '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/parent': typeof ParentRoute
   '/student': typeof StudentRouteWithChildren
+  '/student/achievements': typeof StudentAchievementsRoute
   '/student/listening': typeof StudentListeningRoute
   '/student/speaking': typeof StudentSpeakingRoute
   '/student/vocabulary': typeof StudentVocabularyRouteWithChildren
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/parent'
     | '/student'
+    | '/student/achievements'
     | '/student/listening'
     | '/student/speaking'
     | '/student/vocabulary'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/'
     | '/parent'
     | '/student'
+    | '/student/achievements'
     | '/student/listening'
     | '/student/speaking'
     | '/student/vocabulary'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/'
     | '/parent'
     | '/student'
+    | '/student/achievements'
     | '/student/listening'
     | '/student/speaking'
     | '/student/vocabulary'
@@ -181,6 +193,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentListeningRouteImport
       parentRoute: typeof StudentRoute
     }
+    '/student/achievements': {
+      id: '/student/achievements'
+      path: '/achievements'
+      fullPath: '/student/achievements'
+      preLoaderRoute: typeof StudentAchievementsRouteImport
+      parentRoute: typeof StudentRoute
+    }
     '/student/vocabulary/$category': {
       id: '/student/vocabulary/$category'
       path: '/$category'
@@ -203,6 +222,7 @@ const StudentVocabularyRouteWithChildren =
   StudentVocabularyRoute._addFileChildren(StudentVocabularyRouteChildren)
 
 interface StudentRouteChildren {
+  StudentAchievementsRoute: typeof StudentAchievementsRoute
   StudentListeningRoute: typeof StudentListeningRoute
   StudentSpeakingRoute: typeof StudentSpeakingRoute
   StudentVocabularyRoute: typeof StudentVocabularyRouteWithChildren
@@ -210,6 +230,7 @@ interface StudentRouteChildren {
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
+  StudentAchievementsRoute: StudentAchievementsRoute,
   StudentListeningRoute: StudentListeningRoute,
   StudentSpeakingRoute: StudentSpeakingRoute,
   StudentVocabularyRoute: StudentVocabularyRouteWithChildren,
@@ -227,3 +248,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
