@@ -8,7 +8,7 @@ import {
   getLevel,
   getSeenLevel,
   setSeenLevel,
-  STREAK_DAYS,
+  getStreak,
   type StepKey,
 } from "@/lib/progress";
 import { LevelUpModal } from "@/components/LevelUpModal";
@@ -48,6 +48,7 @@ function StudentDashboard() {
   );
   const [completed, setCompleted] = useState(() => getCompletedSteps());
   const [xp, setXp] = useState(() => getXP());
+  const [streak, setStreak] = useState(() => getStreak());
   const [levelUp, setLevelUp] = useState<number | null>(null);
 
   useEffect(() => {
@@ -55,6 +56,7 @@ function StudentDashboard() {
       setCompleted(getCompletedSteps());
       const nextXp = getXP();
       setXp(nextXp);
+      setStreak(getStreak());
       const lvl = getLevel(nextXp);
       const seen = getSeenLevel();
       if (lvl > seen) {
@@ -81,7 +83,7 @@ function StudentDashboard() {
   if (hasChild) return <Outlet />;
 
   return (
-    <div className="min-h-screen bg-app-gradient">
+    <div className="min-h-screen bg-app-gradient animate-[fade-in_0.3s_ease-out]">
       <header className="flex items-center justify-between px-6 py-6 md:px-12">
         <Logo />
         <div className="flex items-center gap-2">
@@ -109,8 +111,10 @@ function StudentDashboard() {
             </div>
             <div>
               <p className="text-xs font-bold uppercase tracking-wider text-white/85">Streak</p>
-              <p className="text-3xl font-extrabold leading-none">{STREAK_DAYS} days 🔥</p>
-              <p className="mt-1 text-xs font-semibold text-white/85">Keep it burning!</p>
+              <p className="text-3xl font-extrabold leading-none">{streak} {streak === 1 ? "day" : "days"} 🔥</p>
+              <p className="mt-1 text-xs font-semibold text-white/85">
+                {streak === 0 ? "Start today to ignite it!" : "Keep it burning!"}
+              </p>
             </div>
           </div>
 
@@ -236,18 +240,18 @@ function StarMap({ unlocked, total }: { unlocked: number; total: number }) {
       <div className="pointer-events-none absolute -top-10 right-10 h-32 w-32 rounded-full bg-secondary/20 blur-2xl" />
       <div className="pointer-events-none absolute -bottom-10 left-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
 
-      <div className="relative grid grid-cols-3 gap-y-10 sm:grid-cols-4">
+      <div className="relative grid grid-cols-3 gap-x-2 gap-y-8 sm:grid-cols-4 sm:gap-y-10">
         {Array.from({ length: total }).map((_, i) => {
           const isUnlocked = i < unlocked;
           const isCurrent = i === unlocked - 1;
           const isNext = i === unlocked;
           // zig-zag the layout
-          const row = Math.floor(i / 4);
-          const offset = row % 2 === 0 ? "translate-y-0" : "translate-y-6";
+          const row = Math.floor(i / 3);
+          const offset = row % 2 === 0 ? "translate-y-0" : "translate-y-4 sm:translate-y-6";
           return (
             <div key={i} className={`flex flex-col items-center ${offset}`}>
               <div
-                className={`relative grid h-20 w-20 place-items-center rounded-full transition-transform ${
+                className={`relative grid h-14 w-14 place-items-center rounded-full transition-transform sm:h-20 sm:w-20 ${
                   isUnlocked
                     ? "bg-student-gradient text-white shadow-pop hover:scale-110"
                     : isNext
@@ -256,23 +260,19 @@ function StarMap({ unlocked, total }: { unlocked: number; total: number }) {
                 }`}
               >
                 {isUnlocked ? (
-                  <Star className="h-9 w-9" fill="currentColor" strokeWidth={1.5} />
+                  <Star className="h-7 w-7 sm:h-9 sm:w-9" fill="currentColor" strokeWidth={1.5} />
                 ) : isNext ? (
-                  <Star className="h-9 w-9" strokeWidth={2.5} />
+                  <Star className="h-7 w-7 sm:h-9 sm:w-9" strokeWidth={2.5} />
                 ) : (
-                  <Lock className="h-7 w-7" strokeWidth={2.5} />
+                  <Lock className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={2.5} />
                 )}
                 {isCurrent && (
-                  <span className="absolute -bottom-2 rounded-full bg-card px-2 py-0.5 text-[10px] font-extrabold text-primary shadow">
+                  <span className="absolute -bottom-2 rounded-full bg-card px-1.5 py-0.5 text-[9px] font-extrabold text-primary shadow sm:px-2 sm:text-[10px]">
                     YOU
                   </span>
                 )}
               </div>
-              <p
-                className={`mt-3 text-xs font-bold ${
-                  isUnlocked ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
+              <p className={`mt-2 text-[11px] font-bold sm:mt-3 sm:text-xs ${isUnlocked ? "text-foreground" : "text-muted-foreground"}`}>
                 Level {i + 1}
               </p>
             </div>

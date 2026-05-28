@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Play, Repeat, Check, X, ArrowRight, ArrowLeft, Volume2, Sparkles } from "lucide-react";
-import { completeStep, addXP } from "@/lib/progress";
+import { completeStep, addXP, recordLesson } from "@/lib/progress";
 
 export const Route = createFileRoute("/student/listening")({
   head: () => ({
@@ -111,6 +111,7 @@ function ListeningModule() {
       setDone(true);
       completeStep("listen");
       addXP(25);
+      recordLesson({ title: "Listening — Comprehension", emoji: "🎧", xp: 25 });
       return;
     }
     setIndex((n) => n + 1);

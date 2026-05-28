@@ -20,7 +20,7 @@ export function Celebration({
         id: i,
         left: Math.random() * 100,
         delay: Math.random() * 0.8,
-        duration: 2 + Math.random() * 2,
+        duration: 1.4 + Math.random() * 1.2,
         rotate: Math.random() * 360,
         color: ["#60a5fa", "#a78bfa", "#f472b6", "#fbbf24", "#34d399", "#fb7185"][i % 6],
         size: 8 + Math.random() * 8,
@@ -36,7 +36,7 @@ export function Celebration({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 backdrop-blur-sm animate-[fade-in_0.25s_ease-out]">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 backdrop-blur-sm animate-[fade-in_0.18s_ease-out]">
       {/* Confetti */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {pieces.map((p) => (
@@ -64,14 +64,14 @@ export function Celebration({
               left: "50%",
               width: 28,
               height: 28,
-              animation: `star-burst 1.2s ease-out ${i * 0.05}s forwards`,
+              animation: `star-burst 0.9s ease-out ${i * 0.04}s forwards`,
               transform: `rotate(${i * 45}deg) translateY(-10px)`,
             }}
           />
         ))}
       </div>
 
-      <div className="relative mx-6 w-full max-w-md rounded-[2rem] bg-card p-8 text-center shadow-soft animate-[scale-in_0.35s_ease-out]">
+      <div className="relative mx-6 w-full max-w-md rounded-[2rem] bg-card p-8 text-center shadow-soft animate-[scale-in_0.22s_cubic-bezier(0.34,1.56,0.64,1)]">
         <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-student-gradient text-white shadow-pop">
           <Sparkles className="h-10 w-10" />
         </div>
