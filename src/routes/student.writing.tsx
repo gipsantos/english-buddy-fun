@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Celebration } from "@/components/Celebration";
 import { ArrowLeft, ArrowRight, Check, X, Lightbulb } from "lucide-react";
-import { completeStep, addXP } from "@/lib/progress";
+import { completeStep, addXP, recordLesson } from "@/lib/progress";
 
 export const Route = createFileRoute("/student/writing")({
   head: () => ({
@@ -54,6 +54,7 @@ function WritingLab() {
     if (index + 1 >= total) {
       addXP(35);
       completeStep("write");
+      recordLesson({ title: "Writing — Fill the blanks", emoji: "✍️", xp: 35 });
       setCelebrate(true);
       return;
     }
