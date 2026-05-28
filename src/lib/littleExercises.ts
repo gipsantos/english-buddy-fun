@@ -1,14 +1,11 @@
+type Base = { id: number; topic: string; question: string; xpReward: number };
+type Choice = Base & { options: string[]; correctAnswer: string };
+
 export type LittleExercise =
-  | {
-      id: number;
-      type: "flashcard" | "multiple_choice" | "fill_blank" | "listening";
-      topic: string;
-      question: string;
-      options: string[];
-      correctAnswer: string;
-      xpReward: number;
-      audioScript?: string;
-    }
+  | (Choice & { type: "flashcard" })
+  | (Choice & { type: "multiple_choice" })
+  | (Choice & { type: "fill_blank" })
+  | (Choice & { type: "listening"; audioScript: string })
   | {
       id: number;
       type: "speaking";
