@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { Flame, Headphones, BookOpen, Mic, PenLine, Check, Lock, Star, Sparkles } from "lucide-react";
+import { getCompletedSteps, getXP, type StepKey } from "@/lib/progress";
 
 export const Route = createFileRoute("/student")({
   head: () => ({
@@ -13,30 +15,47 @@ export const Route = createFileRoute("/student")({
 });
 
 const STREAK = 5;
-const XP_CURRENT = 320;
 const XP_GOAL = 500;
 
 type Step = {
-  key: string;
+  key: StepKey;
   label: string;
   icon: typeof Headphones;
-  done: boolean;
+  to: "/student/listening" | "/student/vocabulary" | "/student";
 };
 
-const steps: Step[] = [
-  { key: "listen", label: "Listening", icon: Headphones, done: true },
-  { key: "vocab", label: "Vocabulary", icon: BookOpen, done: true },
-  { key: "speak", label: "Speaking", icon: Mic, done: false },
-  { key: "write", label: "Writing", icon: PenLine, done: false },
+const stepDefs: Step[] = [
+  { key: "listen", label: "Listening", icon: Headphones, to: "/student/listening" },
+  { key: "vocab", label: "Vocabulary", icon: BookOpen, to: "/student/vocabulary" },
+  { key: "speak", label: "Speaking", icon: Mic, to: "/student" },
+  { key: "write", label: "Writing", icon: PenLine, to: "/student" },
 ];
 
 const TOTAL_LEVELS = 12;
-const UNLOCKED = 4;
 
 function StudentDashboard() {
+  const [completed, setCompleted] = useState(() => getCompletedSteps());
+  const [xp, setXp] = useState(() => getXP());
+
+  useEffect(() => {
+    const sync = () => {
+      setCompleted(getCompletedSteps());
+      setXp(getXP());
+    };
+    sync();
+    window.addEventListener("eb-progress", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("eb-progress", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+
+  const steps = stepDefs.map((s) => ({ ...s, done: completed[s.key] }));
   const nextStep = steps.find((s) => !s.done);
   const doneCount = steps.filter((s) => s.done).length;
-  const xpPct = Math.min(100, (XP_CURRENT / XP_GOAL) * 100);
+  const xpPct = Math.min(100, (xp / XP_GOAL) * 100);
+  const unlocked = Math.max(1, doneCount + 1);
 
   return (
     <div className="min-h-screen bg-app-gradient">
@@ -68,7 +87,7 @@ function StudentDashboard() {
                 <p className="text-sm font-extrabold uppercase tracking-wider text-muted-foreground">XP Progress</p>
               </div>
               <p className="text-sm font-bold text-foreground">
-                {XP_CURRENT} / {XP_GOAL} XP
+                {xp} / {XP_GOAL} XP
               </p>
             </div>
             <div className="relative mt-4 h-5 w-full overflow-hidden rounded-full bg-muted">
@@ -84,7 +103,7 @@ function StudentDashboard() {
               </div>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">
-              {XP_GOAL - XP_CURRENT} XP to your next level up!
+              {Math.max(0, XP_GOAL - xp)} XP to your next level up!
             </p>
           </div>
         </section>
@@ -139,13 +158,19 @@ function StudentDashboard() {
             </ol>
           </div>
 
-          <Link
-            to="/student/listening"
-            className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-extrabold text-accent-foreground shadow-pop transition-transform hover:scale-[1.02] md:w-auto"
-          >
-            <Sparkles className="h-5 w-5" />
-            Start Mission: {nextStep?.label ?? "All done!"}
-          </Link>
+          {nextStep ? (
+            <Link
+              to={nextStep.to}
+              className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-extrabold text-accent-foreground shadow-pop transition-transform hover:scale-[1.02] md:w-auto"
+            >
+              <Sparkles className="h-5 w-5" />
+              Start Mission: {nextStep.label}
+            </Link>
+          ) : (
+            <p className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/25 px-8 py-4 text-lg font-extrabold backdrop-blur md:w-auto">
+              🎉 All steps done today!
+            </p>
+          )}
         </section>
 
         {/* Star Map */}
@@ -156,10 +181,10 @@ function StudentDashboard() {
               <p className="text-sm text-muted-foreground">Climb the path, one star at a time.</p>
             </div>
             <p className="rounded-full bg-white/70 px-3 py-1 text-xs font-bold text-primary shadow-soft backdrop-blur">
-              {UNLOCKED} / {TOTAL_LEVELS} unlocked
+              {unlocked} / {TOTAL_LEVELS} unlocked
             </p>
           </div>
-          <StarMap unlocked={UNLOCKED} total={TOTAL_LEVELS} />
+          <StarMap unlocked={unlocked} total={TOTAL_LEVELS} />
         </section>
       </main>
     </div>
