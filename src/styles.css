@@ -179,3 +179,21 @@
 }
 .animate-float { animation: float-soft 4s ease-in-out infinite; }
 .animate-float-delay { animation: float-soft 4s ease-in-out -2s infinite; }
+
+@keyframes confetti-fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0.9; }
+}
+
+@keyframes star-burst {
+  0% { transform: scale(0) translate(0, 0); opacity: 1; }
+  100% {
+    transform: rotate(var(--r, 0deg)) translate(0, -180px) scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes wave-bar {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
