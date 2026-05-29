@@ -59,6 +59,12 @@ export function completeStep(step: StepKey) {
   emit();
 }
 
+export function resetSteps() {
+  if (!isBrowser()) return;
+  localStorage.removeItem(STEP_KEY);
+  emit();
+}
+
 export function getXP(): number {
   if (!isBrowser()) return 0;
   const raw = localStorage.getItem(XP_KEY);
