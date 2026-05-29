@@ -10,6 +10,7 @@ import {
   getSeenLevel,
   setSeenLevel,
   getStreak,
+  resetSteps,
   type StepKey,
 } from "@/lib/progress";
 import { LevelUpModal } from "@/components/LevelUpModal";
@@ -81,6 +82,7 @@ function StudentDashboard() {
   const steps = stepDefs.map((s) => ({ ...s, done: completed[s.key] }));
   const nextStep = steps.find((s) => !s.done);
   const doneCount = steps.filter((s) => s.done).length;
+  const allDone = doneCount === steps.length;
   const xpPct = Math.min(100, (xp / XP_GOAL) * 100);
   const level = getLevel(xp);
   const unlocked = Math.min(TOTAL_LEVELS, Math.max(1, level));
@@ -176,8 +178,10 @@ function StudentDashboard() {
                 const isNext = !s.done && steps.slice(0, i).every((p) => p.done);
                 return (
                   <li key={s.key} className="flex flex-col items-center text-center">
-                    <div
-                      className={`grid h-14 w-14 place-items-center rounded-full border-4 transition-all ${
+                    <Link
+                      to={s.to}
+                      aria-label={`Play ${s.label}`}
+                      className={`grid h-14 w-14 place-items-center rounded-full border-4 transition-all hover:scale-110 ${
                         s.done
                           ? "border-white bg-white text-primary"
                           : isNext
@@ -186,7 +190,7 @@ function StudentDashboard() {
                       }`}
                     >
                       {s.done ? <Check className="h-6 w-6" strokeWidth={3} /> : <Icon className="h-6 w-6" />}
-                    </div>
+                    </Link>
                     <p className="mt-2 text-xs font-bold uppercase tracking-wider md:text-sm">
                       {i + 1}. {s.label}
                     </p>
@@ -201,19 +205,37 @@ function StudentDashboard() {
             </ol>
           </div>
 
-          {nextStep ? (
-            <Link
-              to={nextStep.to}
-              className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-extrabold text-accent-foreground shadow-pop transition-transform hover:scale-[1.02] md:w-auto"
-            >
-              <Sparkles className="h-5 w-5" />
-              Start Mission: {nextStep.label}
-            </Link>
-          ) : (
-            <p className="mt-10 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/25 px-8 py-4 text-lg font-extrabold backdrop-blur md:w-auto">
-              🎉 All steps done today!
-            </p>
-          )}
+          <div className="mt-10 flex flex-col gap-3 md:flex-row md:items-center">
+            {nextStep ? (
+              <Link
+                to={nextStep.to}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-extrabold text-accent-foreground shadow-pop transition-transform hover:scale-[1.02] md:w-auto"
+              >
+                <Sparkles className="h-5 w-5" />
+                {doneCount > 0 ? "Resume" : "Start"} Mission: {nextStep.label}
+              </Link>
+            ) : (
+              <Link
+                to="/student/listening"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-8 py-4 text-lg font-extrabold text-accent-foreground shadow-pop transition-transform hover:scale-[1.02] md:w-auto"
+              >
+                <Sparkles className="h-5 w-5" />
+                Play again
+              </Link>
+            )}
+            {allDone && (
+              <button
+                type="button"
+                onClick={() => {
+                  resetSteps();
+                  setCompleted(getCompletedSteps());
+                }}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/20 px-6 py-4 text-base font-extrabold text-white backdrop-blur hover:bg-white/30 md:w-auto"
+              >
+                Reset today's mission
+              </button>
+            )}
+          </div>
         </section>
 
         {/* Star Map */}
