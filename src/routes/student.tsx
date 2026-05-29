@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useMatches } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
+import { AuthGate } from "@/components/AuthGate";
 import { Flame, Headphones, BookOpen, Mic, PenLine, Check, Lock, Star, Sparkles, Trophy } from "lucide-react";
 import {
   getCompletedSteps,
@@ -20,7 +21,11 @@ export const Route = createFileRoute("/student")({
       { name: "description", content: "Your learning adventure starts here." },
     ],
   }),
-  component: StudentDashboard,
+  component: () => (
+    <AuthGate>
+      <StudentDashboard />
+    </AuthGate>
+  ),
 });
 
 const XP_GOAL = 500;
