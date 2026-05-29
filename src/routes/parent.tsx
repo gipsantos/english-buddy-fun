@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
+import { AuthGate } from "@/components/AuthGate";
 import {
   BarChart,
   Bar,
@@ -32,7 +33,11 @@ export const Route = createFileRoute("/parent")({
       { name: "description", content: "Track your child's English learning progress." },
     ],
   }),
-  component: ParentDashboard,
+  component: () => (
+    <AuthGate>
+      <ParentDashboard />
+    </AuthGate>
+  ),
 });
 
 function ParentDashboard() {
