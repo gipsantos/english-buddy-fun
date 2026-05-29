@@ -14,13 +14,270 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      badges_unlocked: {
+        Row: {
+          badge_key: string
+          child_id: string
+          unlocked_at: string
+        }
+        Insert: {
+          badge_key: string
+          child_id: string
+          unlocked_at?: string
+        }
+        Update: {
+          badge_key?: string
+          child_id?: string
+          unlocked_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "badges_unlocked_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "child_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      child_profiles: {
+        Row: {
+          age_group: string
+          avatar: string
+          created_at: string
+          id: string
+          name: string
+          parent_id: string
+        }
+        Insert: {
+          age_group: string
+          avatar?: string
+          created_at?: string
+          id?: string
+          name: string
+          parent_id: string
+        }
+        Update: {
+          age_group?: string
+          avatar?: string
+          created_at?: string
+          id?: string
+          name?: string
+          parent_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "child_profiles_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_xp: {
+        Row: {
+          child_id: string
+          day: string
+          xp: number
+        }
+        Insert: {
+          child_id: string
+          day: string
+          xp?: number
+        }
+        Update: {
+          child_id?: string
+          day?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_xp_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "child_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      exercises: {
+        Row: {
+          age_group: string
+          audio_script: string | null
+          correct_answer: string | null
+          created_at: string
+          difficulty: string | null
+          explanation: string | null
+          extra: Json | null
+          id: string
+          image_prompt: string | null
+          options: Json | null
+          pt_translation: string | null
+          question: string
+          skill: string | null
+          topic: string | null
+          type: string
+          xp_reward: number
+        }
+        Insert: {
+          age_group: string
+          audio_script?: string | null
+          correct_answer?: string | null
+          created_at?: string
+          difficulty?: string | null
+          explanation?: string | null
+          extra?: Json | null
+          id: string
+          image_prompt?: string | null
+          options?: Json | null
+          pt_translation?: string | null
+          question: string
+          skill?: string | null
+          topic?: string | null
+          type: string
+          xp_reward?: number
+        }
+        Update: {
+          age_group?: string
+          audio_script?: string | null
+          correct_answer?: string | null
+          created_at?: string
+          difficulty?: string | null
+          explanation?: string | null
+          extra?: Json | null
+          id?: string
+          image_prompt?: string | null
+          options?: Json | null
+          pt_translation?: string | null
+          question?: string
+          skill?: string | null
+          topic?: string | null
+          type?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      lesson_history: {
+        Row: {
+          child_id: string
+          created_at: string
+          emoji: string | null
+          id: number
+          title: string
+          xp: number
+        }
+        Insert: {
+          child_id: string
+          created_at?: string
+          emoji?: string | null
+          id?: number
+          title: string
+          xp?: number
+        }
+        Update: {
+          child_id?: string
+          created_at?: string
+          emoji?: string | null
+          id?: number
+          title?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_history_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "child_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      progress: {
+        Row: {
+          child_id: string
+          level_seen: number
+          streak_count: number
+          streak_last_day: string | null
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          child_id: string
+          level_seen?: number
+          streak_count?: number
+          streak_last_day?: string | null
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          child_id?: string
+          level_seen?: number
+          streak_count?: number
+          streak_last_day?: string | null
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "progress_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: true
+            referencedRelation: "child_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      words_learned: {
+        Row: {
+          child_id: string
+          created_at: string
+          word: string
+        }
+        Insert: {
+          child_id: string
+          created_at?: string
+          word: string
+        }
+        Update: {
+          child_id?: string
+          created_at?: string
+          word?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "words_learned_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "child_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      owns_child: { Args: { _child_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
