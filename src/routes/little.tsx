@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { Logo } from "@/components/Logo";
+import { AuthGate } from "@/components/AuthGate";
 import { Celebration } from "@/components/Celebration";
 import { ArrowLeft, Volume2, Mic, Sparkles, Star, Home } from "lucide-react";
 import {
@@ -18,7 +19,11 @@ export const Route = createFileRoute("/little")({
       { name: "description", content: "Big buttons, big fun. English for 3-year-olds." },
     ],
   }),
-  component: LittlePage,
+  component: () => (
+    <AuthGate>
+      <LittlePage />
+    </AuthGate>
+  ),
 });
 
 function speak(text: string, lang: "en-US" | "pt-PT" = "en-US") {
